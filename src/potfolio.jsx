@@ -1,96 +1,190 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
+import {
+  siReact,
+  siJavascript,
+  siHtml5,
+  siCss,
+  siNodedotjs,
+  siExpress,
+  siPython,
+  siFlask,
+  siGit,
+  siGithub,
+  siVite,
+  siVercel,
+} from "simple-icons";
 import "./potfolio.css";
 
 /**
  * Portfolio
- * A single-page, monochrome-glassmorphism developer portfolio.
- * Sections: Nav, Home (intro + about + contact bar), Technology Stack,
- * Projects, Footer.
- *
- * The Home section is a single cohesive landing area: hero introduction,
- * a compact About card, and a prominent contact bar, so a visitor never
- * has to scroll to find a way to reach out.
+ * A single-page developer portfolio.
+ * Sections: Nav, Hero, Featured work, Other projects, Tech stack,
+ * Experience, Contact, Footer.
  */
 
+const EMAIL = "franklineo549@gmail.com";
+const GITHUB_URL = "https://github.com/Zomby010";
+const LINKEDIN_URL = "https://www.linkedin.com/in/frankline-otieno-b84290216/";
+
 const NAV_LINKS = [
-  { id: "home", label: "Home" },
-  { id: "stack", label: "Tech Stack" },
-  { id: "projects", label: "Projects" },
-  { id: "contact-bar", label: "Contact" },
+  { id: "work", label: "Work" },
+  { id: "stack", label: "Stack" },
+  { id: "experience", label: "Experience" },
+  { id: "contact", label: "Contact" },
 ];
 
-const STACK = [
-  { name: "React", desc: "Building fast, component-driven interfaces." },
-  { name: "Node.js", desc: "Server-side JavaScript & REST APIs." },
-  { name: "Python", desc: "Scripting, automation & backend logic." },
-  { name: "JavaScript", desc: "Modern ES6+ for the browser and beyond." },
-  { name: "HTML5", desc: "Semantic, accessible markup." },
-  { name: "CSS3", desc: "Responsive layouts & motion design." },
-  { name: "Flask", desc: "Lightweight Python web services." },
-  { name: "SQL", desc: "Data modelling, queries & reporting." },
-];
+/** Featured case study: a website and a business system for one client. */
+const FEATURED = {
+  client: "Spears Resilience Systems",
+  title: "Website & business management system for a security company",
+  summary:
+    "Spears Resilience Systems needed a public face and a way to run day-to-day operations. I built both: a marketing website that presents their security services, and a separate business management system the team uses internally.",
+  parts: [
+    {
+      name: "Company website",
+      desc: "Responsive marketing site presenting the company's services and making it easy for clients to get in touch.",
+      tech: ["React", "JavaScript", "CSS"],
+      live: "https://spearsesiliencesystems.vercel.app",
+      github: "https://github.com/Zomby010/Resilience",
+    },
+    {
+      name: "Business management system",
+      desc: "Internal web app for managing the company's operations, with a Python back end.",
+      tech: ["Python", "SQL", "Web app"],
+      live: "https://resilience-bms.vercel.app",
+      github: null, // private repository
+    },
+  ],
+};
 
 const PROJECTS = [
   {
-    title: "Chatbot Application",
+    title: "Chat",
     description:
-      "An intelligent chatbot built using modern web technologies to provide interactive conversations and automated assistance.",
-    tech: ["React", "Node.js", "JavaScript"],
-    link: "#",
-    github: "#",
+      "A real-time chat application for sending and receiving messages in the browser.",
+    tech: ["JavaScript", "Node.js"],
+    github: "https://github.com/Zomby010/Chat",
+    accent: "teal",
   },
   {
-    title: "Business Advertisement Website",
+    title: "Personal Reminder",
     description:
-      "A responsive business website designed to advertise services, increase customer engagement, and improve online visibility.",
-    tech: ["React", "CSS3", "HTML5"],
-    link: "#",
-    github: "#",
+      "Watches a timetable CSV and, when a scheduled time arrives, sounds an alarm and shows the task on screen.",
+    tech: ["JavaScript", "CSV", "Automation"],
+    github: "https://github.com/Zomby010/Personal-Reminder",
+    accent: "amber",
   },
   {
-    title: "Portfolio Website",
+    title: "Signup & Login Auth",
     description:
-      "A personal portfolio showcasing projects, technical skills, and professional experience using a clean modern interface.",
-    tech: ["React", "CSS3", "JavaScript"],
-    link: "#",
-    github: "#",
+      "A user authentication flow with sign-up and login, the groundwork for any app that needs accounts.",
+    tech: ["JavaScript", "Node.js", "Auth"],
+    github: "https://github.com/Zomby010/Signup-and-Login-AUTH",
+    accent: "violet",
+  },
+  {
+    title: "Chungu",
+    description: "A gallery website for browsing and showcasing a collection of images.",
+    tech: ["JavaScript", "HTML", "CSS"],
+    github: "https://github.com/Zomby010/chungu",
+    accent: "rose",
+  },
+  {
+    title: "Basic APIs",
+    description: "A set of small REST API endpoints exploring routing, requests and JSON responses.",
+    tech: ["JavaScript", "REST"],
+    github: "https://github.com/Zomby010/basic-APIs",
+    accent: "sky",
   },
 ];
 
-const CONTACT_LINKS = [
+/** Hand-drawn icon for SQL, which has no brand logo. */
+const DATABASE_ICON = {
+  path: "M12 2C7.03 2 3 3.57 3 5.5v13C3 20.43 7.03 22 12 22s9-1.57 9-3.5v-13C21 3.57 16.97 2 12 2Zm0 2c4.42 0 7 1.3 7 1.5S16.42 7 12 7 5 5.7 5 5.5 7.58 4 12 4ZM5 8.13C6.6 8.68 9.13 9 12 9s5.4-.32 7-.87V12c0 .2-2.58 1.5-7 1.5S5 12.2 5 12V8.13Zm0 6.5c1.6.55 4.13.87 7 .87s5.4-.32 7-.87v3.87c0 .2-2.58 1.5-7 1.5s-7-1.3-7-1.5v-3.87Z",
+};
+
+const STACK_GROUPS = [
   {
-    label: "GitHub",
-    href: "https://github.com/yourusername",
-    external: true,
-    icon: (
-      <path d="M12 2C6.48 2 2 6.58 2 12.17c0 4.49 2.87 8.3 6.84 9.64.5.1.68-.22.68-.49 0-.24-.01-1.04-.01-1.89-2.78.62-3.37-1.21-3.37-1.21-.46-1.19-1.11-1.51-1.11-1.51-.9-.63.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.89 1.55 2.34 1.1 2.91.84.09-.66.35-1.1.63-1.35-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.31.1-2.72 0 0 .84-.27 2.75 1.05a9.3 9.3 0 0 1 5 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.46.1 2.72.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.8-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .27.18.6.69.49A10.18 10.18 0 0 0 22 12.17C22 6.58 17.52 2 12 2Z" />
-    ),
+    label: "Frontend",
+    items: [
+      { name: "React", icon: siReact },
+      { name: "JavaScript", icon: siJavascript },
+      { name: "HTML5", icon: siHtml5 },
+      { name: "CSS", icon: siCss },
+    ],
   },
   {
-    label: "LinkedIn",
-    href: "https://linkedin.com/in/yourusername",
-    external: true,
-    icon: (
-      <path d="M6.94 8.5H3.56V20h3.38V8.5ZM5.25 3.5a1.96 1.96 0 1 0 0 3.92 1.96 1.96 0 0 0 0-3.92ZM20.44 20h-3.37v-5.9c0-1.41-.03-3.22-1.96-3.22-1.97 0-2.27 1.54-2.27 3.12V20H9.47V8.5h3.24v1.57h.05c.45-.85 1.55-1.75 3.2-1.75 3.42 0 4.05 2.25 4.05 5.18V20Z" />
-    ),
+    label: "Backend & data",
+    items: [
+      { name: "Node.js", icon: siNodedotjs },
+      { name: "Express", icon: siExpress },
+      { name: "Python", icon: siPython },
+      { name: "Flask", icon: siFlask },
+      { name: "SQL", icon: DATABASE_ICON },
+    ],
   },
   {
-    label: "Email",
-    href: "mailto:your.email@example.com",
-    external: false,
-    icon: (
-      <path d="M3 5.5A1.5 1.5 0 0 1 4.5 4h15A1.5 1.5 0 0 1 21 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5v-13Zm2.2.5 6.8 5.6L18.8 6H5.2Zm13.8 1.4-6.4 5.28a1 1 0 0 1-1.2 0L4.99 7.4V18h14V7.4Z" />
-    ),
-  },
-  {
-    label: "Download CV",
-    href: "#",
-    external: false,
-    icon: (
-      <path d="M12 3a1 1 0 0 1 1 1v9.09l2.79-2.8a1 1 0 1 1 1.42 1.42l-4.5 4.5a1 1 0 0 1-1.42 0l-4.5-4.5a1 1 0 1 1 1.42-1.42L11 13.09V4a1 1 0 0 1 1-1ZM5 19a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Z" />
-    ),
+    label: "Tools",
+    items: [
+      { name: "Git", icon: siGit },
+      { name: "GitHub", icon: siGithub },
+      { name: "Vite", icon: siVite },
+      { name: "Vercel", icon: siVercel },
+    ],
   },
 ];
+
+const EXPERIENCE = [
+  {
+    role: "Full-Stack Developer (freelance)",
+    org: "Spears Resilience Systems",
+    period: "2026",
+    points: [
+      "Built and deployed the company website on Vercel.",
+      "Built an internal business management system with a Python back end.",
+    ],
+  },
+  {
+    role: "IT Support",
+    org: "Hands-on support experience",
+    period: null,
+    points: [
+      "Troubleshot hardware, software and network issues for end users.",
+      "Learned to explain technical problems clearly to non-technical people.",
+    ],
+  },
+  {
+    role: "Computer Science",
+    org: "Education",
+    period: null,
+    points: [
+      "Foundation in programming, data structures, databases and web development.",
+    ],
+  },
+];
+
+const LINKEDIN_PATH =
+  "M6.94 8.5H3.56V20h3.38V8.5ZM5.25 3.5a1.96 1.96 0 1 0 0 3.92 1.96 1.96 0 0 0 0-3.92ZM20.44 20h-3.37v-5.9c0-1.41-.03-3.22-1.96-3.22-1.97 0-2.27 1.54-2.27 3.12V20H9.47V8.5h3.24v1.57h.05c.45-.85 1.55-1.75 3.2-1.75 3.42 0 4.05 2.25 4.05 5.18V20Z";
+const MAIL_PATH =
+  "M3 5.5A1.5 1.5 0 0 1 4.5 4h15A1.5 1.5 0 0 1 21 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5v-13Zm2.2.5 6.8 5.6L18.8 6H5.2Zm13.8 1.4-6.4 5.28a1 1 0 0 1-1.2 0L4.99 7.4V18h14V7.4Z";
+const ARROW_PATH =
+  "M7 17 17 7M9 7h8v8";
+
+function Icon({ path, className = "icon" }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
+      <path d={path} />
+    </svg>
+  );
+}
+
+function ArrowIcon() {
+  return (
+    <svg className="icon icon--stroke" viewBox="0 0 24 24" aria-hidden="true">
+      <path d={ARROW_PATH} />
+    </svg>
+  );
+}
 
 /** Small hook: fades an element in once it enters the viewport. */
 function useReveal() {
@@ -110,7 +204,7 @@ function useReveal() {
           }
         });
       },
-      { threshold: 0.15 }
+      { threshold: 0.1 }
     );
 
     observer.observe(node);
@@ -133,14 +227,56 @@ function Reveal({ as: Tag = "div", className = "", children, ...rest }) {
   );
 }
 
+function SectionHeading({ eyebrow, title, children }) {
+  return (
+    <Reveal className="section__head">
+      <p className="section__eyebrow">{eyebrow}</p>
+      <h2 className="section__title">{title}</h2>
+      {children && <p className="section__lead">{children}</p>}
+    </Reveal>
+  );
+}
+
+function TechList({ tech }) {
+  return (
+    <ul className="tags" aria-label="Technologies">
+      {tech.map((t) => (
+        <li key={t}>{t}</li>
+      ))}
+    </ul>
+  );
+}
+
+/** Copies the email address and briefly confirms it. */
+function CopyEmailButton() {
+  const [copied, setCopied] = useState(false);
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(EMAIL);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      window.location.href = `mailto:${EMAIL}`;
+    }
+  };
+
+  return (
+    <button type="button" className="btn btn--ghost" onClick={copy}>
+      <span aria-live="polite">{copied ? "Copied!" : "Copy email"}</span>
+    </button>
+  );
+}
+
 export default function Portfolio() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState("home");
+  const [activeSection, setActiveSection] = useState("");
 
-  // Nav bar gains a stronger glass background once the page scrolls.
+  // Nav bar gains a background once the page scrolls.
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -159,41 +295,54 @@ export default function Portfolio() {
           }
         });
       },
-      { rootMargin: "-40% 0px -50% 0px", threshold: 0 }
+      { rootMargin: "-40% 0px -55% 0px", threshold: 0 }
     );
 
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
   }, []);
 
+  // Close the mobile menu with Escape.
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+    const onKey = (e) => e.key === "Escape" && setMenuOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
+
   const handleNavClick = useCallback((e, id) => {
     e.preventDefault();
     const target = document.getElementById(id);
     if (target) {
       target.scrollIntoView({ behavior: "smooth", block: "start" });
+      history.replaceState(null, "", `#${id}`);
     }
     setMenuOpen(false);
   }, []);
 
   return (
     <div className="portfolio">
-      {/* ================= BACKGROUND ================= */}
-      <div className="bg-glow bg-glow--one" aria-hidden="true" />
-      <div className="bg-glow bg-glow--two" aria-hidden="true" />
-      <div className="bg-grain" aria-hidden="true" />
+      <a href="#main" className="skip-link">
+        Skip to content
+      </a>
+
+      <div className="bg-glow" aria-hidden="true" />
 
       {/* ================= NAVIGATION ================= */}
       <header className={`nav ${scrolled ? "nav--scrolled" : ""}`}>
         <nav className="nav__inner" aria-label="Primary">
           <a
-            href="#home"
+            href="#top"
             className="nav__brand"
-            onClick={(e) => handleNavClick(e, "home")}
+            onClick={(e) => handleNavClick(e, "top")}
           >
             Frank<span className="nav__brand-dot">.</span>
           </a>
 
-          <ul className={`nav__links ${menuOpen ? "nav__links--open" : ""}`}>
+          <ul
+            id="nav-menu"
+            className={`nav__links ${menuOpen ? "nav__links--open" : ""}`}
+          >
             {NAV_LINKS.map((link) => (
               <li key={link.id}>
                 <a
@@ -201,18 +350,28 @@ export default function Portfolio() {
                   className={`nav__link ${
                     activeSection === link.id ? "nav__link--active" : ""
                   }`}
+                  aria-current={activeSection === link.id ? "true" : undefined}
                   onClick={(e) => handleNavClick(e, link.id)}
                 >
                   {link.label}
                 </a>
               </li>
             ))}
+            <li className="nav__cta-item">
+              <a
+                href={`mailto:${EMAIL}`}
+                className="btn btn--primary btn--small"
+              >
+                Hire me
+              </a>
+            </li>
           </ul>
 
           <button
             type="button"
             className={`nav__toggle ${menuOpen ? "nav__toggle--open" : ""}`}
-            aria-label="Toggle navigation menu"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-controls="nav-menu"
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((open) => !open)}
           >
@@ -223,203 +382,282 @@ export default function Portfolio() {
         </nav>
       </header>
 
-      <main>
-        {/* ================= HOME (Hero + About + Contact) ================= */}
-        <section id="home" className="section home">
-          <div className="home__top">
-            <div className="home__intro">
-              <p className="hero__eyebrow">Full-Stack Web Developer</p>
-              <h1 className="hero__title">
-                Hi, I&rsquo;m <span className="hero__title-accent">Frank</span>
-              </h1>
-              <p className="hero__subtitle">
-                Full Stack Web Developer &amp; Data-Focused Engineer
+      <main id="main">
+        {/* ================= HERO ================= */}
+        <section id="top" className="hero">
+          <div className="container hero__inner">
+            <div className="hero__text">
+              <p className="badge">
+                <span className="badge__dot" aria-hidden="true" />
+                Available for freelance &amp; full-time work
               </p>
+              <h1 className="hero__title">
+                Hi, I&rsquo;m Frank.
+                <span className="hero__title-sub">
+                  I build web apps that businesses actually run on.
+                </span>
+              </h1>
               <p className="hero__paragraph">
-                I build responsive, user-friendly web applications and enjoy
-                turning complex problems into clean, working software &mdash;
-                from interactive front ends to the data pipelines that power
-                them behind the scenes.
+                Full-stack developer working in React, Node.js and Python.
+                Most recently I built the website and internal business
+                management system for{" "}
+                <a href="#work" onClick={(e) => handleNavClick(e, "work")}>
+                  Spears Resilience Systems
+                </a>
+                , a security company.
               </p>
               <div className="hero__actions">
                 <a
-                  href="#projects"
+                  href="#work"
                   className="btn btn--primary"
-                  onClick={(e) => handleNavClick(e, "projects")}
+                  onClick={(e) => handleNavClick(e, "work")}
                 >
-                  View Projects
+                  See my work
                 </a>
                 <a
-                  href="#contact-bar"
+                  href="#contact"
                   className="btn btn--ghost"
-                  onClick={(e) => handleNavClick(e, "contact-bar")}
+                  onClick={(e) => handleNavClick(e, "contact")}
                 >
-                  Contact Me
+                  Get in touch
                 </a>
               </div>
+              <ul className="hero__social" aria-label="Profiles">
+                <li>
+                  <a href={GITHUB_URL} target="_blank" rel="noreferrer" aria-label="GitHub">
+                    <Icon path={siGithub.path} />
+                  </a>
+                </li>
+                <li>
+                  <a href={LINKEDIN_URL} target="_blank" rel="noreferrer" aria-label="LinkedIn">
+                    <Icon path={LINKEDIN_PATH} />
+                  </a>
+                </li>
+                <li>
+                  <a href={`mailto:${EMAIL}`} aria-label="Email">
+                    <Icon path={MAIL_PATH} />
+                  </a>
+                </li>
+              </ul>
             </div>
 
-            <div className="home__visual" aria-hidden="true">
-              <div className="avatar-ring">
-                <div className="avatar-placeholder">FN</div>
+            <div className="hero__visual" aria-hidden="true">
+              <div className="avatar">FN</div>
+              <div className="hero__card hero__card--code">
+                <span className="code-key">const</span> frank = {"{"}
+                <br />
+                &nbsp;&nbsp;role: <span className="code-str">&quot;full-stack&quot;</span>,
+                <br />
+                &nbsp;&nbsp;stack: [<span className="code-str">&quot;React&quot;</span>,{" "}
+                <span className="code-str">&quot;Python&quot;</span>],
+                <br />
+                &nbsp;&nbsp;shipping: <span className="code-key">true</span>
+                <br />
+                {"}"}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ================= FEATURED WORK ================= */}
+        <section id="work" className="section">
+          <div className="container">
+            <SectionHeading eyebrow="Featured work" title={FEATURED.client} />
+
+            <Reveal as="article" className="featured">
+              <div className="featured__intro">
+                <h3 className="featured__title">{FEATURED.title}</h3>
+                <p className="featured__summary">{FEATURED.summary}</p>
               </div>
 
-              {/* Signature element: animated data-pipeline graphic */}
-              <svg
-                className="pipeline"
-                viewBox="0 0 320 320"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g className="pipeline__lines" stroke="url(#pipelineGradient)" strokeWidth="1.5" fill="none">
-                  <path className="pipeline__path pipeline__path--1" d="M40,60 C120,60 100,150 180,150 S260,60 300,90" />
-                  <path className="pipeline__path pipeline__path--2" d="M30,180 C100,220 140,150 200,210 S280,180 300,240" />
-                  <path className="pipeline__path pipeline__path--3" d="M50,260 C110,260 150,200 210,240 S270,300 300,280" />
-                </g>
-                <g className="pipeline__nodes" fill="#e5e5ea">
-                  <circle className="pipeline__node" cx="40" cy="60" r="5" />
-                  <circle className="pipeline__node" cx="180" cy="150" r="5" />
-                  <circle className="pipeline__node" cx="300" cy="90" r="5" />
-                  <circle className="pipeline__node" cx="30" cy="180" r="5" />
-                  <circle className="pipeline__node" cx="200" cy="210" r="5" />
-                  <circle className="pipeline__node" cx="300" cy="240" r="5" />
-                  <circle className="pipeline__node" cx="50" cy="260" r="5" />
-                  <circle className="pipeline__node" cx="210" cy="240" r="5" />
-                  <circle className="pipeline__node" cx="300" cy="280" r="5" />
-                </g>
-                <defs>
-                  <linearGradient id="pipelineGradient" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="#ffffff" />
-                    <stop offset="100%" stopColor="#8e8e93" />
-                  </linearGradient>
-                </defs>
-              </svg>
-            </div>
-          </div>
-
-          {/* ---- About, folded into Home ---- */}
-          <Reveal as="div" className="glass-card home__about">
-            <p className="section__eyebrow">About</p>
-            <h2 className="home__about-title">
-              A developer who likes both ends of the stack
-            </h2>
-            <p className="home__about-text">
-              I&rsquo;m a full-stack web developer with a background in
-              computer science and hands-on IT support experience. I
-              specialize in building responsive, user-friendly web
-              applications with React on the front end and Python-based
-              services underneath &mdash; and lately that curiosity has
-              pulled me toward the data side of engineering too: modelling,
-              pipelines, and the systems that keep information moving
-              cleanly from one place to another.
-            </p>
-          </Reveal>
-
-          {/* ---- Contact bar, folded into Home ---- */}
-          <Reveal
-            as="div"
-            id="contact-bar"
-            className="contact-bar"
-            aria-label="Contact links"
-          >
-            {CONTACT_LINKS.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                className="contact-bar__btn"
-                target={item.external ? "_blank" : undefined}
-                rel={item.external ? "noreferrer" : undefined}
-              >
-                <svg
-                  className="contact-bar__icon"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  {item.icon}
-                </svg>
-                <span>{item.label}</span>
-              </a>
-            ))}
-          </Reveal>
-        </section>
-
-        {/* ================= TECHNOLOGY STACK SECTION ================= */}
-        <section id="stack" className="section stack">
-          <div className="section__inner">
-            <Reveal as="p" className="section__eyebrow">Technology Stack</Reveal>
-            <Reveal as="h2" className="section__title">
-              Powered by My Technology Stack
+              <div className="featured__parts">
+                {FEATURED.parts.map((part) => (
+                  <div key={part.name} className="featured__part">
+                    <div className="browser" aria-hidden="true">
+                      <div className="browser__bar">
+                        <span />
+                        <span />
+                        <span />
+                        <em>{part.live.replace("https://", "")}</em>
+                      </div>
+                      <div className="browser__body">
+                        <strong>{part.name}</strong>
+                      </div>
+                    </div>
+                    <h4 className="featured__part-name">{part.name}</h4>
+                    <p className="featured__part-desc">{part.desc}</p>
+                    <TechList tech={part.tech} />
+                    <div className="card-links">
+                      <a
+                        href={part.live}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="link"
+                      >
+                        Live site <ArrowIcon />
+                      </a>
+                      {part.github ? (
+                        <a
+                          href={part.github}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="link link--muted"
+                        >
+                          Source <ArrowIcon />
+                        </a>
+                      ) : (
+                        <span className="link link--muted link--static">
+                          Private client code
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </Reveal>
 
-            <div className="stack__grid">
-              {STACK.map((item, index) => (
-                <Reveal
-                  as="article"
-                  key={item.name}
-                  className="glass-card stack-card"
-                  style={{ transitionDelay: `${index * 60}ms` }}
-                >
-                  <div className="stack-card__icon" aria-hidden="true">
-                    {item.name.slice(0, 2).toUpperCase()}
-                  </div>
-                  <h3 className="stack-card__name">{item.name}</h3>
-                  <p className="stack-card__desc">{item.desc}</p>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ================= PROJECTS SECTION ================= */}
-        <section id="projects" className="section projects">
-          <div className="section__inner">
-            <Reveal as="p" className="section__eyebrow">Projects</Reveal>
-            <Reveal as="h2" className="section__title">Selected Work</Reveal>
-
-            <div className="projects__grid">
+            {/* ---- Other projects ---- */}
+            <Reveal as="h3" className="subheading">
+              More projects
+            </Reveal>
+            <div className="projects">
               {PROJECTS.map((project, index) => (
                 <Reveal
                   as="article"
                   key={project.title}
-                  className="glass-card project-card"
-                  style={{ transitionDelay: `${index * 90}ms` }}
+                  className={`project project--${project.accent}`}
+                  style={{ transitionDelay: `${index * 60}ms` }}
                 >
-                  <div className="project-card__logo" aria-hidden="true">
-                    <svg viewBox="0 0 24 24">
-                      <path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5v-13Zm2 11.6 3.3-3.6a1 1 0 0 1 1.42-.06L12 14.7l3.6-4.3a1 1 0 0 1 1.55.02L18 12.6V6H6v11.1Z" />
-                    </svg>
-                    <span>Logo</span>
+                  <div className="project__cover" aria-hidden="true">
+                    <span>{project.title}</span>
                   </div>
-                  <h3 className="project-card__title">{project.title}</h3>
-                  <p className="project-card__desc">{project.description}</p>
-                  <ul className="project-card__tech">
-                    {project.tech.map((tech) => (
-                      <li key={tech}>{tech}</li>
-                    ))}
-                  </ul>
-                  <div className="project-card__actions">
-                    <a href={project.link} className="btn btn--small btn--primary">
-                      View Project
-                    </a>
-                    <a
-                      href={project.github}
-                      className="btn btn--small btn--ghost"
-                      aria-label={`${project.title} on GitHub`}
-                    >
-                      GitHub
-                    </a>
+                  <div className="project__body">
+                    <h4 className="project__title">
+                      <a href={project.github} target="_blank" rel="noreferrer">
+                        {project.title}
+                        <ArrowIcon />
+                      </a>
+                    </h4>
+                    <p className="project__desc">{project.description}</p>
+                    <TechList tech={project.tech} />
                   </div>
                 </Reveal>
               ))}
             </div>
+
+            <Reveal className="more-link">
+              <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="link">
+                Everything else is on GitHub <ArrowIcon />
+              </a>
+            </Reveal>
+          </div>
+        </section>
+
+        {/* ================= TECH STACK ================= */}
+        <section id="stack" className="section section--tinted">
+          <div className="container">
+            <SectionHeading eyebrow="Tech stack" title="Tools I build with" />
+            <div className="stack">
+              {STACK_GROUPS.map((group) => (
+                <Reveal key={group.label} className="stack__group">
+                  <h3 className="stack__label">{group.label}</h3>
+                  <ul className="stack__items">
+                    {group.items.map((item) => (
+                      <li key={item.name} className="chip">
+                        <Icon path={item.icon.path} className="chip__icon" />
+                        {item.name}
+                      </li>
+                    ))}
+                  </ul>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ================= EXPERIENCE ================= */}
+        <section id="experience" className="section">
+          <div className="container experience">
+            <SectionHeading eyebrow="Experience" title="Where I've been">
+              I came to development through computer science and IT support,
+              so I care about software that is reliable and easy for real
+              people to use.
+            </SectionHeading>
+            <ol className="timeline">
+              {EXPERIENCE.map((item) => (
+                <Reveal as="li" key={item.role} className="timeline__item">
+                  <div className="timeline__head">
+                    <h3 className="timeline__role">{item.role}</h3>
+                    {item.period && (
+                      <span className="timeline__period">{item.period}</span>
+                    )}
+                  </div>
+                  <p className="timeline__org">{item.org}</p>
+                  <ul className="timeline__points">
+                    {item.points.map((point) => (
+                      <li key={point}>{point}</li>
+                    ))}
+                  </ul>
+                </Reveal>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        {/* ================= CONTACT ================= */}
+        <section id="contact" className="section">
+          <div className="container">
+            <Reveal className="contact">
+              <p className="section__eyebrow">Contact</p>
+              <h2 className="contact__title">Have a project in mind?</h2>
+              <p className="contact__text">
+                I&rsquo;m open to freelance projects and full-time roles. Send
+                me a message and I&rsquo;ll get back to you.
+              </p>
+              <a href={`mailto:${EMAIL}`} className="contact__email">
+                {EMAIL}
+              </a>
+              <div className="contact__actions">
+                <a href={`mailto:${EMAIL}`} className="btn btn--primary">
+                  <Icon path={MAIL_PATH} />
+                  Email me
+                </a>
+                <CopyEmailButton />
+                <a
+                  href={LINKEDIN_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn btn--ghost"
+                >
+                  <Icon path={LINKEDIN_PATH} />
+                  LinkedIn
+                </a>
+              </div>
+            </Reveal>
           </div>
         </section>
       </main>
 
       {/* ================= FOOTER ================= */}
       <footer className="footer">
-        <p>
-          &copy; {new Date().getFullYear()} Frank. Built with React.
-        </p>
+        <div className="container footer__inner">
+          <p>&copy; {new Date().getFullYear()} Frank. Built with React &amp; Vite.</p>
+          <ul className="footer__links">
+            <li>
+              <a href={GITHUB_URL} target="_blank" rel="noreferrer">
+                GitHub
+              </a>
+            </li>
+            <li>
+              <a href={LINKEDIN_URL} target="_blank" rel="noreferrer">
+                LinkedIn
+              </a>
+            </li>
+            <li>
+              <a href={`mailto:${EMAIL}`}>Email</a>
+            </li>
+          </ul>
+        </div>
       </footer>
     </div>
   );
