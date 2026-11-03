@@ -14,6 +14,8 @@ import {
   siVercel,
   siDjango,
   siPostgresql,
+  siFirebase,
+  siArduino,
 } from "simple-icons";
 import "./potfolio.css";
 import spearsSiteHero from "./assets/projects/spears-site-hero.webp";
@@ -24,6 +26,17 @@ import bmsTodo from "./assets/projects/bms-todo.webp";
 import bmsManagerMobile from "./assets/projects/bms-manager-mobile.webp";
 import bmsSuppliers from "./assets/projects/bms-suppliers.webp";
 import bmsClientPortal from "./assets/projects/bms-client-portal.webp";
+import posSell from "./assets/projects/pos-sell.webp";
+import posPayment from "./assets/projects/pos-payment.webp";
+import posReceipt from "./assets/projects/pos-receipt.webp";
+import posProducts from "./assets/projects/pos-products.webp";
+import mindmateHome from "./assets/projects/mindmate-home.webp";
+import mindmateFeatures from "./assets/projects/mindmate-features.webp";
+import mindmateSupport from "./assets/projects/mindmate-support.webp";
+import poolTitle from "./assets/projects/pool-title.webp";
+import poolHow from "./assets/projects/pool-how.webp";
+import poolWiring from "./assets/projects/pool-wiring.webp";
+import poolDriver from "./assets/projects/pool-driver.webp";
 
 
 /**
@@ -44,22 +57,19 @@ const NAV_LINKS = [
   { id: "contact", label: "Contact" },
 ];
 
-/** Client these production projects were built for. */
-const CLIENT = {
-  name: "Spears Resilience Systems",
-  title: "Website & business management system for a security company",
-  summary:
-    "Spears Resilience Systems, a security company in Kisumu, needed a public face and a way to run day-to-day operations. I built both, and both are live and in daily use: a marketing website that wins new clients, and a business management system the whole team runs the company on.",
-};
+/** Intro for the production work section. */
+const WORK_INTRO =
+  "Software and hardware that real businesses and people use every day. Click any project to open it.";
 
 /**
  * Production projects only: each one is live and used by a real client.
- * Every project links to its live site; screenshots are of the real product.
+ * Every project links to its live site (or, for hardware, its build guide);
+ * screenshots are of the real product.
  */
 const PROJECTS = [
   {
     name: "Spears Resilience Systems website",
-    kind: "Company website",
+    kind: "Company website · Spears Resilience Systems",
     desc: "Responsive marketing site for the company's guarding, alarm, CCTV, canine and VIP protection services, built to turn visitors into quote requests by phone, WhatsApp or the contact form.",
     highlights: [
       "Explains GPS-verified guarding and the live tracker to prospective clients",
@@ -79,7 +89,7 @@ const PROJECTS = [
   },
   {
     name: "Resilience Business Management System",
-    kind: "Business management system",
+    kind: "Business management system · Spears Resilience Systems",
     desc: "The web platform the company runs on, replacing paper records with one secure system for the Director, Manager, Accountant, Secretary, Supervisors and Guards, plus a portal for clients.",
     highlights: [
       "GPS attendance: guards sign in on site and the Manager sees everyone on a live map",
@@ -95,6 +105,67 @@ const PROJECTS = [
       { src: bmsManagerMobile, alt: "The Manager's phone view of the business management system" },
       { src: bmsSuppliers, alt: "Supplier bills page in the business management system" },
       { src: bmsClientPortal, alt: "Client portal on a phone, showing feedback and the company's answers" },
+    ],
+  },
+  {
+    name: "Shop POS",
+    kind: "Point of sale · Minimart",
+    desc: "A point of sale for a Kenyan minimart that runs on the shop laptop with no internet, with an online copy for checking sales and reports from anywhere.",
+    highlights: [
+      "Barcode scanning plus quick-sale buttons for loose goods sold by the kg or litre",
+      "Cash, M-Pesa, split and deni (credit) payments with thermal receipt printing",
+      "Stock, suppliers, stock takes, expenses, daily profit reports and automatic backups",
+    ],
+    tech: ["Python", "Django", "PostgreSQL", "HTMX", "Vercel"],
+    live: "https://shop-pos-pi.vercel.app",
+    github: null, // private client repository
+    ratio: "16 / 9",
+    shots: [
+      { src: posSell, alt: "Shop POS sell screen with items in the cart and quick-sale buttons" },
+      { src: posPayment, alt: "Shop POS payment dialog with cash, M-Pesa, split and deni options" },
+      { src: posReceipt, alt: "Shop POS sale complete page showing the printed receipt" },
+      { src: posProducts, alt: "Shop POS product list with prices, stock levels and low-stock badge" },
+    ],
+  },
+  {
+    name: "MindMate",
+    kind: "Wellbeing web app",
+    desc: "A calm, private web app for looking after your mental wellbeing: daily mood check-ins, evidence-based self-help tools, and an AI companion designed around safety first.",
+    highlights: [
+      "Mood check-ins with trends, plus breathing, mindfulness, movement, sleep and planning tools",
+      "AI companion with crisis detection on the server before the AI is called",
+      "Region-aware crisis lines on every screen, data export and full account deletion",
+    ],
+    tech: ["React", "Vite", "Node.js", "Express", "Firebase"],
+    live: "https://chat-five-drab-88.vercel.app",
+    github: "https://github.com/Zomby010/Chat",
+    ratio: "16 / 9",
+    shots: [
+      { src: mindmateHome, alt: "MindMate landing page: A calm place to look after your mind" },
+      { src: mindmateFeatures, alt: "MindMate features: check-ins, AI companion, breathing, movement, sleep and plans" },
+      { src: mindmateSupport, alt: "MindMate support page with crisis lines for the visitor's country" },
+    ],
+  },
+  {
+    name: "Pay-to-Unlock Pool Gate",
+    kind: "Hardware · IoT payment lock",
+    desc: "Lets a pool table run pay-per-game with no staff present: an M-Pesa payment of exactly KSh 20 unlocks the solenoid lock, which re-locks itself a few seconds later.",
+    highlights: [
+      "ESP32 reads M-Pesa confirmation SMS from a SIM900 GSM module over UART",
+      "Validates the exact amount and sender, and ignores repeated messages",
+      "Drives a 12 V solenoid through a relay or MOSFET, with wiring and a printed build guide",
+    ],
+    tech: ["ESP32", "C++", "Arduino", "SIM900 GSM", "M-Pesa"],
+    live: "/docs/pay-to-unlock-pool-gate-build-guide.pdf",
+    linkLabel: "Build guide",
+    github: null,
+    sourceNote: "Hardware project",
+    ratio: "16 / 9",
+    shots: [
+      { src: poolTitle, alt: "Pay-to-Unlock Pool Gate build guide cover" },
+      { src: poolHow, alt: "How the pool gate works: customer pays, SIM900, ESP32, relay, solenoid" },
+      { src: poolWiring, alt: "Wiring diagram for the ESP32, SIM900, buck converter, relay and solenoid" },
+      { src: poolDriver, alt: "Solenoid driver wiring with relay and MOSFET options" },
     ],
   },
 ];
@@ -123,6 +194,7 @@ const STACK_GROUPS = [
       { name: "Django", icon: siDjango },
       { name: "Flask", icon: siFlask },
       { name: "PostgreSQL", icon: siPostgresql },
+      { name: "Firebase", icon: siFirebase },
       { name: "SQL", icon: DATABASE_ICON },
     ],
   },
@@ -133,6 +205,7 @@ const STACK_GROUPS = [
       { name: "GitHub", icon: siGithub },
       { name: "Vite", icon: siVite },
       { name: "Vercel", icon: siVercel },
+      { name: "Arduino / ESP32", icon: siArduino },
     ],
   },
 ];
@@ -145,6 +218,15 @@ const EXPERIENCE = [
     points: [
       "Built and deployed the company website (spearsresiliencesystems.com).",
       "Built the Django business management system the whole company runs on, from GPS attendance to payroll and invoicing.",
+    ],
+  },
+  {
+    role: "Full-Stack Developer (freelance)",
+    org: "Retail and small business clients",
+    period: "2026",
+    points: [
+      "Built and deployed Shop POS, an offline-first point of sale for a minimart.",
+      "Designed and built an M-Pesa pay-to-unlock lock for a pool table on ESP32.",
     ],
   },
   {
@@ -234,7 +316,11 @@ function Reveal({ as: Tag = "div", className = "", children, ...rest }) {
 function ProjectShowcase({ project, flipped }) {
   const [active, setActive] = useState(0);
   const shot = project.shots[active];
-  const host = project.live.replace(/^https?:\/\//, "");
+  const isExternal = /^https?:\/\//.test(project.live);
+  const host = isExternal
+    ? project.live.replace(/^https?:\/\//, "")
+    : `${project.linkLabel ?? "Live site"} (PDF)`;
+  const linkLabel = project.linkLabel ?? "Live site";
 
   return (
     <Reveal
@@ -247,7 +333,7 @@ function ProjectShowcase({ project, flipped }) {
           target="_blank"
           rel="noreferrer"
           className="browser"
-          aria-label={`Open ${project.name} live site (${host})`}
+          aria-label={`Open ${project.name}: ${linkLabel.toLowerCase()} (${host})`}
         >
           <div className="browser__bar" aria-hidden="true">
             <span />
@@ -263,7 +349,7 @@ function ProjectShowcase({ project, flipped }) {
               decoding="async"
             />
             <span className="browser__cta" aria-hidden="true">
-              Visit live site <ArrowIcon />
+              {isExternal ? "Visit live site" : `Open ${linkLabel.toLowerCase()}`} <ArrowIcon />
             </span>
           </div>
         </a>
@@ -302,7 +388,7 @@ function ProjectShowcase({ project, flipped }) {
         <TechList tech={project.tech} />
         <div className="card-links">
           <a href={project.live} target="_blank" rel="noreferrer" className="link">
-            Live site <ArrowIcon />
+            {linkLabel} <ArrowIcon />
           </a>
           {project.github ? (
             <a
@@ -315,7 +401,7 @@ function ProjectShowcase({ project, flipped }) {
             </a>
           ) : (
             <span className="link link--muted link--static">
-              Private client code
+              {project.sourceNote ?? "Private client code"}
             </span>
           )}
         </div>
@@ -559,8 +645,8 @@ export default function Portfolio() {
         {/* ================= PRODUCTION WORK ================= */}
         <section id="work" className="section">
           <div className="container">
-            <SectionHeading eyebrow="Production work" title={CLIENT.name}>
-              {CLIENT.summary}
+            <SectionHeading eyebrow="Production work" title="Projects in real use">
+              {WORK_INTRO}
             </SectionHeading>
 
             <div className="showcases">
