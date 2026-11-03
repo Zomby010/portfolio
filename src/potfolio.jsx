@@ -12,13 +12,24 @@ import {
   siGithub,
   siVite,
   siVercel,
+  siDjango,
+  siPostgresql,
 } from "simple-icons";
 import "./potfolio.css";
+import spearsSiteHero from "./assets/projects/spears-site-hero.webp";
+import spearsSiteServices from "./assets/projects/spears-site-services.webp";
+import spearsSiteTracker from "./assets/projects/spears-site-tracker.webp";
+import spearsSiteClients from "./assets/projects/spears-site-clients.webp";
+import bmsTodo from "./assets/projects/bms-todo.webp";
+import bmsManagerMobile from "./assets/projects/bms-manager-mobile.webp";
+import bmsSuppliers from "./assets/projects/bms-suppliers.webp";
+import bmsClientPortal from "./assets/projects/bms-client-portal.webp";
+
 
 /**
  * Portfolio
  * A single-page developer portfolio.
- * Sections: Nav, Hero, Featured work, Other projects, Tech stack,
+ * Sections: Nav, Hero, Production projects, Tech stack,
  * Experience, Contact, Footer.
  */
 
@@ -33,68 +44,58 @@ const NAV_LINKS = [
   { id: "contact", label: "Contact" },
 ];
 
-/** Featured case study: a website and a business system for one client. */
-const FEATURED = {
-  client: "Spears Resilience Systems",
+/** Client these production projects were built for. */
+const CLIENT = {
+  name: "Spears Resilience Systems",
   title: "Website & business management system for a security company",
   summary:
-    "Spears Resilience Systems needed a public face and a way to run day-to-day operations. I built both: a marketing website that presents their security services, and a separate business management system the team uses internally.",
-  parts: [
-    {
-      name: "Company website",
-      desc: "Responsive marketing site presenting the company's services and making it easy for clients to get in touch.",
-      tech: ["React", "JavaScript", "CSS"],
-      live: "https://spearsesiliencesystems.vercel.app",
-      github: "https://github.com/Zomby010/Resilience",
-    },
-    {
-      name: "Business management system",
-      desc: "Internal web app for managing the company's operations, with a Python back end.",
-      tech: ["Python", "SQL", "Web app"],
-      live: "https://resilience-bms.vercel.app",
-      github: null, // private repository
-    },
-  ],
+    "Spears Resilience Systems, a security company in Kisumu, needed a public face and a way to run day-to-day operations. I built both, and both are live and in daily use: a marketing website that wins new clients, and a business management system the whole team runs the company on.",
 };
 
+/**
+ * Production projects only: each one is live and used by a real client.
+ * Every project links to its live site; screenshots are of the real product.
+ */
 const PROJECTS = [
   {
-    title: "Chat",
-    description:
-      "A real-time chat application for sending and receiving messages in the browser.",
-    tech: ["JavaScript", "Node.js"],
-    github: "https://github.com/Zomby010/Chat",
-    accent: "teal",
+    name: "Spears Resilience Systems website",
+    kind: "Company website",
+    desc: "Responsive marketing site for the company's guarding, alarm, CCTV, canine and VIP protection services, built to turn visitors into quote requests by phone, WhatsApp or the contact form.",
+    highlights: [
+      "Explains GPS-verified guarding and the live tracker to prospective clients",
+      "Free site assessment, call and WhatsApp calls to action on every screen",
+      "Fast, mobile-first build deployed on Vercel with a custom domain",
+    ],
+    tech: ["React", "JavaScript", "CSS", "Vercel"],
+    live: "https://www.spearsresiliencesystems.com",
+    github: "https://github.com/Zomby010/Resilience",
+    ratio: "1366 / 585",
+    shots: [
+      { src: spearsSiteHero, alt: "Spears Resilience Systems home page hero: Protecting what matters" },
+      { src: spearsSiteServices, alt: "Services section of the Spears Resilience Systems website" },
+      { src: spearsSiteTracker, alt: "Website section showing GPS-verified guards and the live tracker" },
+      { src: spearsSiteClients, alt: "Who we protect section of the Spears Resilience Systems website" },
+    ],
   },
   {
-    title: "Personal Reminder",
-    description:
-      "Watches a timetable CSV and, when a scheduled time arrives, sounds an alarm and shows the task on screen.",
-    tech: ["JavaScript", "CSV", "Automation"],
-    github: "https://github.com/Zomby010/Personal-Reminder",
-    accent: "amber",
-  },
-  {
-    title: "Signup & Login Auth",
-    description:
-      "A user authentication flow with sign-up and login, the groundwork for any app that needs accounts.",
-    tech: ["JavaScript", "Node.js", "Auth"],
-    github: "https://github.com/Zomby010/Signup-and-Login-AUTH",
-    accent: "violet",
-  },
-  {
-    title: "Chungu",
-    description: "A gallery website for browsing and showcasing a collection of images.",
-    tech: ["JavaScript", "HTML", "CSS"],
-    github: "https://github.com/Zomby010/chungu",
-    accent: "rose",
-  },
-  {
-    title: "Basic APIs",
-    description: "A set of small REST API endpoints exploring routing, requests and JSON responses.",
-    tech: ["JavaScript", "REST"],
-    github: "https://github.com/Zomby010/basic-APIs",
-    accent: "sky",
+    name: "Resilience Business Management System",
+    kind: "Business management system",
+    desc: "The web platform the company runs on, replacing paper records with one secure system for the Director, Manager, Accountant, Secretary, Supervisors and Guards, plus a portal for clients.",
+    highlights: [
+      "GPS attendance: guards sign in on site and the Manager sees everyone on a live map",
+      "Invoices, receipts, statements, payroll, supplier bills and month-end close",
+      "Role-based home pages, approvals, incidents, digital occurrence book and a client portal",
+    ],
+    tech: ["Python", "Django", "PostgreSQL", "Vercel"],
+    live: "https://bms.spearsresiliencesystems.com",
+    github: null, // private client repository
+    ratio: "16 / 9",
+    shots: [
+      { src: bmsTodo, alt: "Manager's home page in the business management system listing things that need approval" },
+      { src: bmsManagerMobile, alt: "The Manager's phone view of the business management system" },
+      { src: bmsSuppliers, alt: "Supplier bills page in the business management system" },
+      { src: bmsClientPortal, alt: "Client portal on a phone, showing feedback and the company's answers" },
+    ],
   },
 ];
 
@@ -119,7 +120,9 @@ const STACK_GROUPS = [
       { name: "Node.js", icon: siNodedotjs },
       { name: "Express", icon: siExpress },
       { name: "Python", icon: siPython },
+      { name: "Django", icon: siDjango },
       { name: "Flask", icon: siFlask },
+      { name: "PostgreSQL", icon: siPostgresql },
       { name: "SQL", icon: DATABASE_ICON },
     ],
   },
@@ -140,8 +143,8 @@ const EXPERIENCE = [
     org: "Spears Resilience Systems",
     period: "2026",
     points: [
-      "Built and deployed the company website on Vercel.",
-      "Built an internal business management system with a Python back end.",
+      "Built and deployed the company website (spearsresiliencesystems.com).",
+      "Built the Django business management system the whole company runs on, from GPS attendance to payroll and invoicing.",
     ],
   },
   {
@@ -224,6 +227,100 @@ function Reveal({ as: Tag = "div", className = "", children, ...rest }) {
     >
       {children}
     </Tag>
+  );
+}
+
+/** One production project: a clickable screenshot gallery plus details. */
+function ProjectShowcase({ project, flipped }) {
+  const [active, setActive] = useState(0);
+  const shot = project.shots[active];
+  const host = project.live.replace(/^https?:\/\//, "");
+
+  return (
+    <Reveal
+      as="article"
+      className={`showcase ${flipped ? "showcase--flipped" : ""}`.trim()}
+    >
+      <div className="showcase__media">
+        <a
+          href={project.live}
+          target="_blank"
+          rel="noreferrer"
+          className="browser"
+          aria-label={`Open ${project.name} live site (${host})`}
+        >
+          <div className="browser__bar" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+            <em>{host}</em>
+          </div>
+          <div className="browser__body" style={{ aspectRatio: project.ratio }}>
+            <img
+              src={shot.src}
+              alt={shot.alt}
+              loading="lazy"
+              decoding="async"
+            />
+            <span className="browser__cta" aria-hidden="true">
+              Visit live site <ArrowIcon />
+            </span>
+          </div>
+        </a>
+
+        {project.shots.length > 1 && (
+          <div className="thumbs" role="group" aria-label={`${project.name} screenshots`}>
+            {project.shots.map((s, i) => (
+              <button
+                key={s.src}
+                type="button"
+                className={`thumb ${i === active ? "thumb--active" : ""}`.trim()}
+                onClick={() => setActive(i)}
+                aria-label={`Show screenshot ${i + 1}: ${s.alt}`}
+                aria-pressed={i === active}
+              >
+                <img src={s.src} alt="" loading="lazy" decoding="async" />
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="showcase__body">
+        <p className="showcase__kind">{project.kind}</p>
+        <h3 className="showcase__title">
+          <a href={project.live} target="_blank" rel="noreferrer">
+            {project.name}
+          </a>
+        </h3>
+        <p className="showcase__desc">{project.desc}</p>
+        <ul className="showcase__points">
+          {project.highlights.map((point) => (
+            <li key={point}>{point}</li>
+          ))}
+        </ul>
+        <TechList tech={project.tech} />
+        <div className="card-links">
+          <a href={project.live} target="_blank" rel="noreferrer" className="link">
+            Live site <ArrowIcon />
+          </a>
+          {project.github ? (
+            <a
+              href={project.github}
+              target="_blank"
+              rel="noreferrer"
+              className="link link--muted"
+            >
+              Source <ArrowIcon />
+            </a>
+          ) : (
+            <span className="link link--muted link--static">
+              Private client code
+            </span>
+          )}
+        </div>
+      </div>
+    </Reveal>
   );
 }
 
@@ -459,97 +556,22 @@ export default function Portfolio() {
           </div>
         </section>
 
-        {/* ================= FEATURED WORK ================= */}
+        {/* ================= PRODUCTION WORK ================= */}
         <section id="work" className="section">
           <div className="container">
-            <SectionHeading eyebrow="Featured work" title={FEATURED.client} />
+            <SectionHeading eyebrow="Production work" title={CLIENT.name}>
+              {CLIENT.summary}
+            </SectionHeading>
 
-            <Reveal as="article" className="featured">
-              <div className="featured__intro">
-                <h3 className="featured__title">{FEATURED.title}</h3>
-                <p className="featured__summary">{FEATURED.summary}</p>
-              </div>
-
-              <div className="featured__parts">
-                {FEATURED.parts.map((part) => (
-                  <div key={part.name} className="featured__part">
-                    <div className="browser" aria-hidden="true">
-                      <div className="browser__bar">
-                        <span />
-                        <span />
-                        <span />
-                        <em>{part.live.replace("https://", "")}</em>
-                      </div>
-                      <div className="browser__body">
-                        <strong>{part.name}</strong>
-                      </div>
-                    </div>
-                    <h4 className="featured__part-name">{part.name}</h4>
-                    <p className="featured__part-desc">{part.desc}</p>
-                    <TechList tech={part.tech} />
-                    <div className="card-links">
-                      <a
-                        href={part.live}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="link"
-                      >
-                        Live site <ArrowIcon />
-                      </a>
-                      {part.github ? (
-                        <a
-                          href={part.github}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="link link--muted"
-                        >
-                          Source <ArrowIcon />
-                        </a>
-                      ) : (
-                        <span className="link link--muted link--static">
-                          Private client code
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Reveal>
-
-            {/* ---- Other projects ---- */}
-            <Reveal as="h3" className="subheading">
-              More projects
-            </Reveal>
-            <div className="projects">
+            <div className="showcases">
               {PROJECTS.map((project, index) => (
-                <Reveal
-                  as="article"
-                  key={project.title}
-                  className={`project project--${project.accent}`}
-                  style={{ transitionDelay: `${index * 60}ms` }}
-                >
-                  <div className="project__cover" aria-hidden="true">
-                    <span>{project.title}</span>
-                  </div>
-                  <div className="project__body">
-                    <h4 className="project__title">
-                      <a href={project.github} target="_blank" rel="noreferrer">
-                        {project.title}
-                        <ArrowIcon />
-                      </a>
-                    </h4>
-                    <p className="project__desc">{project.description}</p>
-                    <TechList tech={project.tech} />
-                  </div>
-                </Reveal>
+                <ProjectShowcase
+                  key={project.name}
+                  project={project}
+                  flipped={index % 2 === 1}
+                />
               ))}
             </div>
-
-            <Reveal className="more-link">
-              <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="link">
-                Everything else is on GitHub <ArrowIcon />
-              </a>
-            </Reveal>
           </div>
         </section>
 
